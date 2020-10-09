@@ -88,25 +88,47 @@ def find_solution_iter(current_setup):
         print (new_setup[k])
     print()
     
-#other 35 moves    
-    for i in range(1, 36):
-        #second move (next_move[1]) = 0
-        curr_move = next_move[i]
-        #curr_move = 0
-        num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
-        #num = 
-        new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
-        #new_sel = [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1]] = second row
-        while num == 0 and next_move[i] < 5:
-            next_move[i] += 1
+#other 35 moves  
+    all_done = False
+    while not all_done:  
+        for i in range(1, 36):
+            #second move (next_move[1]) = 0
             curr_move = next_move[i]
+            #curr_move = 0
             num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
+            #num = 
             new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
-        
-        new_setup = select(new_setup, sel[curr_move][0], sel[curr_move][1])
-        sel = new_sel
-        
-        
+            #new_sel = [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1]] = second row
+            while num == 0 and next_move[i] < 5:
+                next_move[i] += 1
+                curr_move = next_move[i]
+                num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
+                new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
+            
+            if num == 0 and next_move[i] >= 5:
+                next_move[i-1] += 1
+                break
+            
+            
+            new_setup = select(new_setup, sel[curr_move][0], sel[curr_move][1])
+            sel = new_sel
+            
+            for k in range(6):
+                print (new_setup[k])
+            print()
+          
+            for i in range (6):
+                line = new_setup[i]
+                if all(elem == '0' for elem in line):
+                    all_done = True
+                else:
+                    all_done = False
+                    break
+
+        if all_done:
+            print ('Done')
+            print (next_move)
+            
         
 # =============================================================================
 #         sel = selectable(new_setup, 0, next_move[i])
