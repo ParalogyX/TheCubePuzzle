@@ -70,7 +70,102 @@ def select (current_setup, row, col):
     new_setup[row][col] = '0'
     return new_setup
 
+def max_moves(lenght):
 
+    i = 0
+    
+    k = 10**lenght
+    for kCount in range(lenght + 1):
+        while len(base10toN(int(i),6)) < lenght + 1:
+            i += k
+        
+        #debug comments
+# =============================================================================
+#         
+#         print ("kCount: ", kCount)
+#         print ("lenght: ", len(base10toN(int(i),6)))
+#         print("k: ", k)
+#         print ("i: ", i)
+#         print ("max result + 1: ", base10toN(int(i),6))
+#         print ("max result: ", base10toN(int(i - 1),6))
+# =============================================================================
+        
+        i -= k
+        k /= 10
+        k = int(k)
+    
+    return i
+
+
+def move_generator (index):
+    string = str (base10toN (index, 6))
+    result = [int(string) for string in string]
+    
+    #result = []
+    #result = int(d) for d in str(n)
+    return result
+
+def dec2hex(num):
+    if num == 0:
+        return 0
+    ans = ""
+    while num > 0:
+        ans = str(num%6) + ans
+        num /= 6
+    return int(ans)       
+
+def base10toN(num, base):
+    """Change ``num'' to given base
+    Upto base 36 is supported."""
+
+    converted_string, modstring = "", ""
+    currentnum = num
+    if not 1 < base < 37:
+        raise ValueError("base must be between 2 and 36")
+    if not num:
+        return '0'
+    while currentnum:
+        mod = currentnum % base
+        currentnum = currentnum // base
+        converted_string = chr(48 + mod + 7*(mod > 10)) + converted_string
+    return converted_string
+
+def isDone(current_setup):
+    for i in range (6):
+        line = new_setup[i]
+        if all(elem == '0' for elem in line):
+            return True
+        else:
+            return False
+
+
+def find_solution_guessing(current_setup):
+        
+    #diffetent start position
+    for x in range (6):
+        for y in range (6):
+            for movesSel in range (max_moves(36)):
+                next_move = move_generator(movesSel)
+                new_setup = current_setup
+                num = selectable_number(new_setup, x, y) 
+                sel = selectable(new_setup, x, y)
+                new_setup = select(new_setup, x, y)
+                
+                for i in range(36):
+                    
+                    #second move (next_move[1]) = 0
+                    curr_move = next_move[i]
+                    #curr_move = 0
+                    num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
+                    #num = 
+                    new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
+                    
+                    
+                    if num == 0 and not isDone(new_setup):
+                        print ("moves: ", next_move, " are compromised")
+                    break
+                
+                    new_setup = select(new_setup, sel[curr_move][0], sel[curr_move][1])
 
 def find_solution_iter(current_setup):
     new_setup = current_setup
@@ -78,7 +173,17 @@ def find_solution_iter(current_setup):
     for i in range(36):
         next_move.append(0)
         
+    
+            #next_move[len(next_move)] += 1
+    
         
+     
+    for i in range(36):
+        for j in range(6):
+            next_move[len(next_move)] += 1
+        next_move[len(next_move)] = 0
+        next
+     
     #first move
     num = selectable_number(new_setup, 0, 0) 
     sel = selectable(new_setup, 0, 0)
@@ -171,9 +276,13 @@ def find_solution_iter(current_setup):
         print ("All done: ", all_done())
     
     return next_move
-        
 
-print (find_solution_iter(setup))
+#print(dec2hex(78))        
+
+find_solution_guessing(setup)
+    
+#move_generator (36, 6, 8)
+#print (find_solution_iter(setup))
 
 # =============================================================================
 # num = selectable_number(setup, 2, 3)
