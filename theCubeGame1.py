@@ -12,6 +12,8 @@ setup = [['>', 'V', 'V', '<', '<', 'V'],
          ['^', '^', '<', '>', '<', '^'],
          ['^', '>', '>', '^', '^', '<']]
 
+
+print ("Original setup: ")
 for i in range(6):
     print (setup[i])
 print()
@@ -83,15 +85,20 @@ def find_solution_iter(current_setup):
     #num = 5
     #sel = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5]] = first line
     new_setup = select(new_setup, 0, 0)
-    
+    print ("setup after first move: ")
     for k in range(6):
         print (new_setup[k])
     print()
+    
+    print ("num after first move: ", num)
+    print ("sel after first move: ", sel)
+    print ("next_move after first move: ", next_move)
     
 #other 35 moves  
     all_done = False
     while not all_done:  
         for i in range(1, 36):
+            
             #second move (next_move[1]) = 0
             curr_move = next_move[i]
             #curr_move = 0
@@ -100,13 +107,21 @@ def find_solution_iter(current_setup):
             new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
             #new_sel = [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1]] = second row
             while num == 0 and next_move[i] < 5:
+                print ("num == 0, increase next_move[", i, "]: ")
+                
                 next_move[i] += 1
                 curr_move = next_move[i]
-                num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
-                new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
+                print ("next_move: ", next_move)
             
+                num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
+                
+                new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
+                print ("num after increasing next_move[", i,"]: ", num)
+                print ("new_sel after increasing next_move[", i,"]: ", new_sel)
             if num == 0 and next_move[i] >= 5:
+                print ("change ", i, " + 1 move")
                 next_move[i-1] += 1
+                print ("next_move: ", next_move)
                 break
             
             
@@ -143,6 +158,15 @@ def find_solution_iter(current_setup):
         for k in range(6):
             print (new_setup[k])
         print()
+    
+    print ("num after ", i," move: ", num)
+    #print ("new_num after ", i," move: ", new_num)
+    print ("sel after ", i," move: ", sel)
+    print ("new_sel after ", i," move: ", new_sel)
+    print ("next_move after ", i," move: ", next_move)
+    
+    print ("All done: ", all_done())
+    
     return next_move
         
 
