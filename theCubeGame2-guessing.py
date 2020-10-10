@@ -4,6 +4,8 @@ Created on Sun Oct  4 14:43:48 2020
 
 @author: vpe
 """
+import copy
+
 
 setup = [['>', 'V', 'V', '<', '<', 'V'], 
          ['>', '>', '>', 'V', 'V', 'V'],
@@ -66,7 +68,7 @@ def selectable_number (current_setup, row, col):
 
 def select (current_setup, row, col):
 
-    new_setup = current_setup
+    new_setup = copy.deepcopy(current_setup)
     new_setup[row][col] = '0'
     return new_setup
 
@@ -98,7 +100,8 @@ def max_moves(lenght):
 
 
 def move_generator (index):
-    string = str (base10toN (index, 6))
+    string = str (base10toN (index, 6)).zfill(36)
+
     result = [int(string) for string in string]
     
     #result = []
@@ -132,7 +135,7 @@ def base10toN(num, base):
 
 def isDone(current_setup):
     for i in range (6):
-        line = new_setup[i]
+        line = current_setup[i]
         if all(elem == '0' for elem in line):
             return True
         else:
@@ -146,7 +149,9 @@ def find_solution_guessing(current_setup):
         for y in range (6):
             for movesSel in range (max_moves(36)):
                 next_move = move_generator(movesSel)
-                new_setup = current_setup
+                #new_setup = [] 
+                #new_setup.extend(current_setup)
+                new_setup = copy.deepcopy(current_setup)
                 num = selectable_number(new_setup, x, y) 
                 sel = selectable(new_setup, x, y)
                 new_setup = select(new_setup, x, y)
@@ -162,8 +167,11 @@ def find_solution_guessing(current_setup):
                     
                     
                     if num == 0 and not isDone(new_setup):
-                        print ("moves: ", next_move, " are compromised")
-                    break
+                        print ("moves: ", next_move, ", started on x = ", x, " and y = ", y, " are compromised")
+                        break
+                
+                    if  isDone(new_setup):
+                        print ("Please start on x = ", x, " and y = ", y, " and use moves: ", next_move)
                 
                     new_setup = select(new_setup, sel[curr_move][0], sel[curr_move][1])
 
@@ -278,8 +286,8 @@ def find_solution_iter(current_setup):
     return next_move
 
 #print(dec2hex(78))        
-
-find_solution_guessing(setup)
+find_solution_guessing(copy.deepcopy(setup))
+#find_solution_guessing(setup.copy())
     
 #move_generator (36, 6, 8)
 #print (find_solution_iter(setup))
