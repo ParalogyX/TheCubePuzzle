@@ -163,7 +163,7 @@ def find_solution_guessing(current_setup):
                     #curr_move = 0
                     num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
                     #num = 
-                    new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
+                    sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
                     
                     
                     if num == 0 and not isDone(new_setup):
@@ -174,6 +174,77 @@ def find_solution_guessing(current_setup):
                         print ("Please start on x = ", x, " and y = ", y, " and use moves: ", next_move)
                 
                     new_setup = select(new_setup, sel[curr_move][0], sel[curr_move][1])
+                    
+                    
+                    
+def check_solution(current_setup, start, moves, moves_number = 36):
+    """
+    
+
+    Parameters
+    ----------
+    current_setup : setup
+        DESCRIPTION.
+    start : [x, y]
+        DESCRIPTION.
+    moves : moves
+        DESCRIPTION.
+    moves_number : int, optional
+        DESCRIPTION. The default is 36.
+
+    Returns
+    -------
+    movesLeft : int
+        36 - moves done before stacked.
+
+    """
+    
+    new_setup = copy.deepcopy(current_setup)
+    x = start[0]
+    y = start[1]
+    num = selectable_number(new_setup, x, y) 
+    sel = selectable(new_setup, x, y)
+    new_setup[x][y] = '0'
+    #debug print
+    print ("selected start point")
+    for k in range(6):
+        print (new_setup[k])
+    print()
+    
+    print ("num after first move: ", num)
+    print ("sel after first move: ", sel)
+    movesLeft = moves_number
+    print ("moves left", movesLeft)
+    
+    for i in range (len(moves)):
+        curr_move = moves[i]
+        print (i + 1, " move: ", curr_move)
+        print ("current setup")
+        for k in range(6):
+            print (new_setup[k])
+        print()
+        
+        num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
+        sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
+        print ("num before ", i + 1, " move: ", num)
+        print ("sel before ", i + 1, " move: ", sel)
+        if num != 0:
+            movesLeft -= 1
+            #there are less possible moves, when in "DNA". Need to be solved!!!
+            new_setup = select(new_setup, sel[curr_move][0], sel[curr_move][1])
+            print ("setup after ", i + 1, " move")
+            for k in range(6):
+                print (new_setup[k])
+            print()
+            
+            print ("moves left", movesLeft)
+            
+        else:
+            print ("num = 0")
+            break
+        
+    return movesLeft
+
 
 def find_solution_iter(current_setup):
     new_setup = current_setup
@@ -286,10 +357,17 @@ def find_solution_iter(current_setup):
     return next_move
 
 #print(dec2hex(78))        
-find_solution_guessing(copy.deepcopy(setup))
+#find_solution_guessing(copy.deepcopy(setup))
 #find_solution_guessing(setup.copy())
     
-#move_generator (36, 6, 8)
+moves = move_generator (1237678234231928716247634234234)
+
+print(moves)
+
+test = check_solution(setup, [0, 0], moves)
+
+print (test)
+
 #print (find_solution_iter(setup))
 
 # =============================================================================
