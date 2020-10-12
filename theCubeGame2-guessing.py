@@ -78,7 +78,7 @@ def max_moves(lenght):
     
     k = 10**lenght
     for kCount in range(lenght + 1):
-        while len(base10toN(int(i),6)) < lenght + 1:
+        while len(base10toN(int(i),5)) < lenght + 1:
             i += k
         
         #debug comments
@@ -100,10 +100,12 @@ def max_moves(lenght):
 
 
 def move_generator (index):
-    string = str (base10toN (index, 6)).zfill(36)
+    string = str (base10toN (index, 5)).zfill(36)
 
     result = [int(string) for string in string]
     
+    if len(result) > 16:
+        result = result[:36]
     #result = []
     #result = int(d) for d in str(n)
     return result
@@ -204,7 +206,7 @@ def check_solution(current_setup, start, moves, moves_number = 36):
     y = start[1]
     num = selectable_number(new_setup, x, y) 
     sel = selectable(new_setup, x, y)
-    new_setup[x][y] = '0'
+    new_setup = select(new_setup, x, y)
     #debug print
     print ("selected start point")
     for k in range(6):
@@ -223,14 +225,19 @@ def check_solution(current_setup, start, moves, moves_number = 36):
         for k in range(6):
             print (new_setup[k])
         print()
-        
-        num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
-        sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
+        if curr_move < len(sel):
+            print ("next move is: ", sel[curr_move][0], sel[curr_move][1])
+            num = selectable_number(new_setup, sel[curr_move][0], sel[curr_move][1])
+            new_sel = selectable(new_setup, sel[curr_move][0], sel[curr_move][1])
+        else:
+            num = 0
+        #print ("new next move is: ", new_sel[curr_move][0], new_sel[curr_move][1])
         print ("num before ", i + 1, " move: ", num)
         print ("sel before ", i + 1, " move: ", sel)
-        if num != 0:
+        if num != 0 and curr_move < len(sel):
             movesLeft -= 1
             #there are less possible moves, when in "DNA". Need to be solved!!!
+            print ("next move, before it is: ", sel[curr_move][0], sel[curr_move][1])
             new_setup = select(new_setup, sel[curr_move][0], sel[curr_move][1])
             print ("setup after ", i + 1, " move")
             for k in range(6):
@@ -238,6 +245,7 @@ def check_solution(current_setup, start, moves, moves_number = 36):
             print()
             
             print ("moves left", movesLeft)
+            sel = new_sel
             
         else:
             print ("num = 0")
@@ -360,11 +368,11 @@ def find_solution_iter(current_setup):
 #find_solution_guessing(copy.deepcopy(setup))
 #find_solution_guessing(setup.copy())
     
-moves = move_generator (1237678234231928716247634234234)
+moves = move_generator (int(1E16))
 
 print(moves)
 
-test = check_solution(setup, [0, 0], moves)
+test = check_solution(setup, [3, 2], moves)
 
 print (test)
 
