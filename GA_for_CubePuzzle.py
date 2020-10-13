@@ -18,12 +18,7 @@ from pymoo.factory import get_algorithm, get_crossover, get_mutation, get_sampli
 class MyProblem(Problem):
 
     
-    setup = [['>', 'V', 'V', '<', '<', 'V'], 
-             ['>', '>', '>', 'V', 'V', 'V'],
-             ['>', 'V', 'V', '^', '<', '<'],
-             ['^', '>', '^', '<', '^', '<'],
-             ['^', '^', '<', '>', '<', '^'],
-             ['^', '>', '>', '^', '^', '<']]
+    
 
     def __init__(self):
         # super().__init__(n_var=38,
@@ -41,6 +36,14 @@ class MyProblem(Problem):
                          elementwise_evaluation = True)
 
     def _evaluate(self, x, out, *args, **kwargs):
+        
+        setup = [['>', 'V', 'V', '<', '<', 'V'], 
+             ['>', '>', '>', 'V', 'V', 'V'],
+             ['>', 'V', 'V', '^', '<', '<'],
+             ['^', '>', '^', '<', '^', '<'],
+             ['^', '^', '<', '>', '<', '^'],
+             ['^', '>', '>', '^', '^', '<']]
+        
         moves = []
         for i in range (36):
             moves.append(int(x[i]))
@@ -71,14 +74,14 @@ class MyProblem(Problem):
 
 problem = MyProblem()
 
-algorithm = NSGA2(op_size=100,sampling = get_sampling("int_random"),crossover=get_crossover("int_sbx", prob=1.0, eta=3.0), mutation=get_mutation("int_pm", eta=3.0))
+algorithm = NSGA2(op_size=100,sampling = get_sampling("int_random"),crossover=get_crossover("int_sbx", prob=0.95, eta=30.0), mutation=get_mutation("int_pm", eta=6.0))
                   
 #get_sampling("int_random")
 
                   
 res = minimize(problem,
                algorithm,
-               ("n_gen", 2000),
+               ("n_gen", 200),
                verbose=True,
                seed=1)
 #print(res.F[2])

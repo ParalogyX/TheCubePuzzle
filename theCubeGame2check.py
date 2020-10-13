@@ -7,18 +7,18 @@ Created on Sun Oct  4 14:43:48 2020
 import copy
 
 
-setup = [['>', 'V', 'V', '<', '<', 'V'], 
-         ['>', '>', '>', 'V', 'V', 'V'],
-         ['>', 'V', 'V', '^', '<', '<'],
-         ['^', '>', '^', '<', '^', '<'],
-         ['^', '^', '<', '>', '<', '^'],
-         ['^', '>', '>', '^', '^', '<']]
+# setup = [['>', 'V', 'V', '<', '<', 'V'], 
+#          ['>', '>', '>', 'V', 'V', 'V'],
+#          ['>', 'V', 'V', '^', '<', '<'],
+#          ['^', '>', '^', '<', '^', '<'],
+#          ['^', '^', '<', '>', '<', '^'],
+#          ['^', '>', '>', '^', '^', '<']]
 
 
-print ("Original setup: ")
-for i in range(6):
-    print (setup[i])
-print()
+# print ("Original setup: ")
+# for i in range(6):
+#     print (setup[i])
+# print()
 def selectable (current_setup, row, col):
     result =[]
     if current_setup[row][col] == '>':
@@ -258,7 +258,8 @@ def check_solution(current_setup, start, moves, moves_number = 36, debug = False
             sel = new_sel
             
         else:
-            print ("num = 0")
+            if debug:
+                print ("num = 0")
             break
         
     return movesLeft
@@ -378,13 +379,13 @@ def find_solution_iter(current_setup):
 #find_solution_guessing(copy.deepcopy(setup))
 #find_solution_guessing(setup.copy())
     
-moves = move_generator (int(1E16))
+#moves = move_generator (int(1E16))
 
-print(moves)
+#print(moves)
 
-test = check_solution(setup, [3, 2], moves)
+#test = check_solution(setup, [3, 2], moves)
 
-print (test)
+#print (test)
 
 #print (find_solution_iter(setup))
 
