@@ -5,6 +5,8 @@ Created on Thu Sep 17 15:20:20 2020
 @author: vpe
 """
 
+import sys
+
 import numpy as np
 from theCubeGame2check import *
 
@@ -27,7 +29,7 @@ class MyProblem(Problem):
         #                   xl=np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
         #                   xu=np.array([5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]),
         #                   elementwise_evaluation=True)
-        super().__init__(n_var=38,
+        super().__init__(n_var=36,
                          n_obj=1,
                          n_constr=0,
                          xl=0,
@@ -47,8 +49,10 @@ class MyProblem(Problem):
         moves = []
         for i in range (36):
             moves.append(int(x[i]))
-        xs = int(x[36])
-        ys = int(x[37])
+        #xs = int(x[36])
+        #ys = int(x[37])
+        xs = globalX
+        ys = globalY
         func_res = check_solution (setup, [xs, ys], moves)
         
         f1 = func_res
@@ -63,7 +67,7 @@ class MyProblem(Problem):
         #f1 = x[0] ** 2 + x[1] ** 2
         #f2 = (x[0] - 1) ** 2 + x[1] ** 2
         
-        #g1 = f1 - 2 
+        #g1 =  f1-9
         #g1 = 2 * (x[0] - 0.1) * (x[0] - 0.9) / 0.18
         #g2 = - 20 * (x[0] - 0.4) * (x[0] - 0.6) / 4.8
 
@@ -72,23 +76,38 @@ class MyProblem(Problem):
         out["G"] = []
 
 
-problem = MyProblem()
+#!!!GLOBAL VARIABLES!!!
 
-algorithm = NSGA2(op_size=100,sampling = get_sampling("int_random"),crossover=get_crossover("int_sbx", prob=0.95, eta=30.0), mutation=get_mutation("int_pm", eta=6.0))
-                  
-#get_sampling("int_random")
 
-                  
-res = minimize(problem,
-               algorithm,
-               ("n_gen", 200),
-               verbose=True,
-               seed=1)
+for i in range (6):
+    for j in range (6):
+        globalX = i
+        globalY = j
+        
+        problem = MyProblem()
+        
+        algorithm = NSGA2(op_size=500,sampling = get_sampling("int_random"),crossover=get_crossover("int_sbx", prob=0.95, eta=3.0), mutation=get_mutation("int_pm", eta=60.0))
+                          
+        #get_sampling("int_random")
+        
+                          
+        res = minimize(problem,
+                       algorithm,
+                       ("n_gen", 1000),
+                       verbose=True,
+                       seed=1)
+        
+        with open('output3.txt', 'a') as f:
+            print ("Start: ", globalX, ", ", globalY, file=f)
+            print ("Result: ", res.F, file=f)
+            for k in range (len(res.X)):
+                print ("Inputs: ", str(res.X[k]), file=f)
+        
 #print(res.F[2])
 #res.F[2] = -res.F[2]
 
-plot = Scatter()
+#plot = Scatter()
 
-plot.add(res.F, color="red")
+#plot.add(res.F, color="red")
 
-plot.show()
+#plot.show()
