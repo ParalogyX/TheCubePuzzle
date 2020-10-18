@@ -38,7 +38,7 @@ def selectable (current_setup, row, col):
             if cur_row > row and current_setup[cur_row][col] != '0':
                 result.append([cur_row, col])     
     else:
-        print ("wrong selected")
+        #print ("wrong selected")
         return 0
     return result
 
@@ -62,7 +62,7 @@ def selectable_number (current_setup, row, col):
             if cur_row > row and current_setup[cur_row][col] != '0':
                 result += 1     
     else:
-        print ("wrong selected")
+        #print ("wrong selected")
         return 0
     return result
 

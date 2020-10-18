@@ -15,13 +15,17 @@ from theCubeGame2check import *
 #         ['^', '>', '>', '^', '^', '<']]
 
 setup = [['>', 'V', 'V', '<', '<', 'V'], 
-        ['>', '^', '>', 'V', 'V', 'V'],
-        ['>', '^', 'V', '^', '<', '<'],
+        ['>', '^', '^', '^', 'V', '^'],
+        ['>', '^', '^', '^', '<', 'V'],
         ['^', '^', '^', '<', '^', '<'],
-        ['^', '^', '<', '>', '<', '^'],
-        ['^', '^', '>', '^', '^', '<']]
+        ['^', '^', '^', '>', '<', '^'],
+        ['^', '^', '^', '^', '^', '^']]
+
+globCounter = 0
 
 def tryMove(curr_setup, moves, moves_done):
+    global globCounter
+    globCounter += 1
     if len(moves) == 0:
         return "Empty"
     new_setup = copy.deepcopy(curr_setup)
@@ -97,6 +101,15 @@ def tryMove(curr_setup, moves, moves_done):
         return tryMove(updatedSetup,cue,moves_done)
 
         
-        
 
-tst = tryMove(setup, [[0,0]], [])
+for i in range (6):
+    for j in range (6):
+        try:     
+            print (i, j)
+            globCounter = 0
+            tst = tryMove(setup, [[i,j]], [])
+            print (tst, globCounter, i, j)
+        except:
+            print ("error")
+
+#tst = tryMove(setup, [[1,1]], [])
