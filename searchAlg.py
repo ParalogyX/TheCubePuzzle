@@ -6,7 +6,7 @@ Created on Sun Oct 18 14:01:53 2020
 """
 
 from theCubeGame2check import *
-
+import time
 
 setup = [['>', 'V', 'V', '<', '<', 'V'], 
           ['>', '>', '>', 'V', 'V', 'V'],
@@ -23,7 +23,15 @@ setup = [['>', 'V', 'V', '<', '<', 'V'],
 
 globCounter = 0
 
-def tryMoveRecurs(curr_setup, moves, moves_done):
+
+def matrixToLine(curr_setup):
+    result = []
+    for i in range (6):
+        for j in range (6):
+            result.append(curr_setup[i][j])   
+    return result
+
+def tryMoveRecurs(curr_setup, moves, moves_done, memoDeadEnds = {}):
     global globCounter
     globCounter += 1
     if len(moves) == 0:
@@ -31,7 +39,16 @@ def tryMoveRecurs(curr_setup, moves, moves_done):
     new_setup = copy.deepcopy(curr_setup)
     queue = moves
     move = queue.pop(0)
-
+    #move = tuple(move)
+        
+    if tuple(move) in memoDeadEnds.keys():
+        if memoDeadEnds[tuple(move)] == new_setup:
+            #del queue[-1]
+            if len(queue) == 0:
+                return "Empty"
+            move = queue.pop(0)
+            #move = tuple(move)
+    
     t1 = move[0]
     t2 = move[1]
 
@@ -51,17 +68,24 @@ def tryMoveRecurs(curr_setup, moves, moves_done):
     
     num = selectable_number(new_setup,move[0],move[1])
     
-    if new_setup == [['0', '0', '0', '0', '0', '0'], 
-                    ['0', '0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0', '0']]:
+    
+    lineSetup =  matrixToLine(new_setup)
+    ggg = lineSetup.count('0')
+    if matrixToLine(new_setup).count('0') > 14:
+    
+    # if new_setup == [['0', '0', '0', '0', '0', '0'], 
+    #                 ['0', '0', '0', '0', '0', '0'],
+    #                 ['0', '0', '0', '0', '0', '0'],
+    #                 ['0', '0', '0', '0', '0', '0'],
+    #                 ['0', '0', '0', '0', '0', '0'],
+    #                 ['0', '0', '0', '0', '0', '0']]:
         print ("Done!!!")
         print (queue)
         return True
     
-    if num == 0:
+
+    if num == 0: 
+        memoDeadEnds[tuple(move)] = new_setup
         #move.extend(queue)
         #Need previous move
         if new_setup[move[0]][move[1]] == '0':
@@ -70,11 +94,12 @@ def tryMoveRecurs(curr_setup, moves, moves_done):
             # print (setup[move[0]][move[1]])
             new_setup[move[0]][move[1]] = setup[move[0]][move[1]]       #!!!Reading of global var
             # print (new_setup[move[0]][move[1]])
-            # print (setup[move[0]][move[1]])
+            # print (setup[move[0]][move[1]])   
             # new_setup[move[0]][move[1]] = 'XXX'
             # print (new_setup[move[0]][move[1]])
             # print (setup[move[0]][move[1]])
             del moves_done[-1]
+            #return 0
             return tryMoveRecurs(new_setup, queue, moves_done)
         
             #queue.insert(0, move)
@@ -103,14 +128,26 @@ def tryMoveRecurs(curr_setup, moves, moves_done):
 
 def tryMoveIterDFS(curr_setup, moves, moves_done):
     global iterNumber
+    memoDeadEnds = {}
     new_setup = copy.deepcopy(curr_setup)
     queue = moves
     while len(queue) != 0:
         
-        if iterNumber > 1E6:
+        
+        if iterNumber > 1E7:
             return False
         iterNumber += 1
         move = queue.pop(0)
+        
+        while tuple(move) in memoDeadEnds.keys():
+            if memoDeadEnds[tuple(move)] == new_setup:
+            #if memoDeadEnds[tuple(move)]:
+                #del queue[-1]
+                # if len(queue) == 0:
+                #     return "Empty"
+                move = queue.pop(0)
+            else:
+                break
     
         t1 = move[0]
         t2 = move[1]
@@ -121,6 +158,8 @@ def tryMoveIterDFS(curr_setup, moves, moves_done):
         num = selectable_number(new_setup,move[0],move[1])
         
         if num == 0:
+            memoDeadEnds[tuple(move)] = new_setup
+            #memoDeadEnds[tuple(move)] = True
             if new_setup[move[0]][move[1]] == '0':
                 new_setup[move[0]][move[1]] = setup[move[0]][move[1]]       #!!!Reading of global var
                 del moves_done[-1]
@@ -141,23 +180,25 @@ def tryMoveIterDFS(curr_setup, moves, moves_done):
             #     for i in range (6):
             #         print (new_setup[i], file=f)
         
-        
-        if new_setup == [['0', '0', '0', '0', '0', '0'], 
-                        ['0', '0', '0', '0', '0', '0'],
-                        ['0', '0', '0', '0', '0', '0'],
-                        ['0', '0', '0', '0', '0', '0'],
-                        ['0', '0', '0', '0', '0', '0'],
-                        ['0', '0', '0', '0', '0', '0']]:
+        if matrixToLine(new_setup).count('0') > 33:
+        # if new_setup == [['0', '0', '0', '0', '0', '0'], 
+        #                 ['0', '0', '0', '0', '0', '0'],
+        #                 ['0', '0', '0', '0', '0', '0'],
+        #                 ['0', '0', '0', '0', '0', '0'],
+        #                 ['0', '0', '0', '0', '0', '0'],
+        #                 ['0', '0', '0', '0', '0', '0']]:
             print ("Done!!!")
             print ("queue: ", queue)
             print ("Moves done: ", moves_done)
+            for i in range (6):
+                print (new_setup[i])
             return True
         
-    print ("No more moves")
-    for i in range (6):
-        print (new_setup[i])
-    print ("Queue: ", queue)
-    print ("Moves done: ", moves_done)
+    # print ("No more moves")
+    # for i in range (6):
+    #     print (new_setup[i])
+    # print ("Queue: ", queue)
+    # print ("Moves done: ", moves_done)
     return False
         
 # for i in range (6):
@@ -172,9 +213,33 @@ def tryMoveIterDFS(curr_setup, moves, moves_done):
 iterNumber = 0
 i = 0
 j = 0
+
+# tst = tryMoveRecurs(setup, [[i,j]], [], {})
+#tst = tryMoveIterDFS(setup, [[i,j]], [])
+
+# for i in range (6):
+#     for j in range (6):
+#         print (i, j)
+#         globCounter = 0
+#         tst = tryMoveRecurs(setup, [[i,j]], [], {})
+#         print (tst, globCounter, i, j)
+
 for i in range (6):
     for j in range (6):
+        print (i, j)
         iterNumber = 0
         tst = tryMoveIterDFS(setup, [[i,j]], [])
-        print (iterNumber)
-        
+        if tst != False:
+            print (tst, iterNumber)
+# start = time.time()       
+# for i in range (int(1E9)):
+#     pass
+# end = time.time()
+# print("Empty sycle (1E9): ", end - start)
+# print (i)
+# i = 0
+# j = 0
+# start = time.time() 
+# tst = tryMoveIterDFS(setup, [[i,j]], [])
+# end = time.time()
+# print("tryMoveIterDFS (1000001): ", end - start)
