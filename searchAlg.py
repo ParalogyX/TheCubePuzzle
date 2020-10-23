@@ -69,9 +69,8 @@ def tryMoveRecurs(curr_setup, moves, moves_done, memoDeadEnds = {}):
     num = selectable_number(new_setup,move[0],move[1])
     
     
-    lineSetup =  matrixToLine(new_setup)
-    ggg = lineSetup.count('0')
-    if matrixToLine(new_setup).count('0') > 14:
+
+    if matrixToLine(new_setup).count('0') > 33:
     
     # if new_setup == [['0', '0', '0', '0', '0', '0'], 
     #                 ['0', '0', '0', '0', '0', '0'],
@@ -80,7 +79,10 @@ def tryMoveRecurs(curr_setup, moves, moves_done, memoDeadEnds = {}):
     #                 ['0', '0', '0', '0', '0', '0'],
     #                 ['0', '0', '0', '0', '0', '0']]:
         print ("Done!!!")
-        print (queue)
+        print ("queue: ", queue)
+        print ("Moves done: ", moves_done)
+        for i in range (6):
+            print (new_setup[i])
         return True
     
 
@@ -135,6 +137,7 @@ def tryMoveIterDFS(curr_setup, moves, moves_done):
         
         
         if iterNumber > 1E7:
+            print ("too long")
             return False
         iterNumber += 1
         move = queue.pop(0)
@@ -145,7 +148,12 @@ def tryMoveIterDFS(curr_setup, moves, moves_done):
                 #del queue[-1]
                 # if len(queue) == 0:
                 #     return "Empty"
+                # print ("Move: ", move)
+                # print ("Setup: ", )
+                # for i in range (6):
+                #     print (new_setup[i])
                 move = queue.pop(0)
+                # print ("Move after: ", move)
             else:
                 break
     
@@ -158,10 +166,16 @@ def tryMoveIterDFS(curr_setup, moves, moves_done):
         num = selectable_number(new_setup,move[0],move[1])
         
         if num == 0:
-            memoDeadEnds[tuple(move)] = new_setup
+            # if move == [1,4]:
+            #     print
+            if tuple(move) not in memoDeadEnds.keys():
+                memoDeadEnds[tuple(move)] = new_setup
+            
             #memoDeadEnds[tuple(move)] = True
             if new_setup[move[0]][move[1]] == '0':
                 new_setup[move[0]][move[1]] = setup[move[0]][move[1]]       #!!!Reading of global var
+                #if moves_done[-1] == [2,2]:
+                    # print('remove [2,2]')
                 del moves_done[-1]
                 #go to the beginning
         else:
@@ -172,6 +186,8 @@ def tryMoveIterDFS(curr_setup, moves, moves_done):
             
             new_setup = select(new_setup,move[0],move[1])
             moves_done.append(move)
+            
+            ##assert moves_done == [[0,0], [0,0]]
             # with open('output_Breadth_first_search.txt', 'a') as f:
             #     print ("Last move is: ", move, file=f)
             #     print("Moves line is: ", moves_done, file=f)
@@ -180,7 +196,7 @@ def tryMoveIterDFS(curr_setup, moves, moves_done):
             #     for i in range (6):
             #         print (new_setup[i], file=f)
         
-        if matrixToLine(new_setup).count('0') > 33:
+        if matrixToLine(new_setup).count('0') > 34:
         # if new_setup == [['0', '0', '0', '0', '0', '0'], 
         #                 ['0', '0', '0', '0', '0', '0'],
         #                 ['0', '0', '0', '0', '0', '0'],
@@ -217,13 +233,29 @@ j = 0
 # tst = tryMoveRecurs(setup, [[i,j]], [], {})
 #tst = tryMoveIterDFS(setup, [[i,j]], [])
 
+#TEST RECUR with all starts
 # for i in range (6):
 #     for j in range (6):
 #         print (i, j)
 #         globCounter = 0
-#         tst = tryMoveRecurs(setup, [[i,j]], [], {})
+#         try:
+#             tst = tryMoveRecurs(setup, [[i,j]], [], {})
+#         except:
+#             #print("error")
+#             tst = "error"
 #         print (tst, globCounter, i, j)
 
+#TEST ITER with 0 0
+# i = 5
+# j = 1
+# print (i, j)
+# globCounter = 0
+# tst = tryMoveRecurs(setup, [[i,j]], [], {})
+# print (tst, globCounter)   
+
+
+#TEST ITER with all starts
+iters = {}
 for i in range (6):
     for j in range (6):
         print (i, j)
@@ -231,6 +263,22 @@ for i in range (6):
         tst = tryMoveIterDFS(setup, [[i,j]], [])
         if tst != False:
             print (tst, iterNumber)
+        else:
+            print ("Not found: ", tst, iterNumber)
+        iters[(i,j)] = iterNumber
+        print()
+        
+            
+#TEST ITER with 0 0
+# i = 0
+# j = 2
+# print (i, j)
+# iterNumber = 0
+# tst = tryMoveIterDFS(setup, [[i,j]], [])
+# print (tst, iterNumber)            
+            
+            
+            
 # start = time.time()       
 # for i in range (int(1E9)):
 #     pass

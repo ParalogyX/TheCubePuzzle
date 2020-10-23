@@ -100,9 +100,44 @@ setup = [['>', 'V', 'V', '<', '<', 'V'],
 Рекурсия. Передаешь сетап и набор ходов, внутри делаешь ход и передаёт дальше. Если вернула тупик, передаёт без первого хода. Тупик, когда набор ходов пустой.			 
 			 
 			 
-			 
-			 
-			 
-			 
-			 
+23-10
+
+Found:
+Iter sol.
+Start 0,2
+on iter 1180 move [1,3] was removed (actually on prev iter), next in queue is [1,4], but it is marked as deadend with the same setup:
+
+0
+list
+6
+['>', 'V', '0', '<', '<', 'V']
+1
+list
+6
+['>', '>', '0', 'V', 'V', 'V']
+2
+list
+6
+['>', 'V', 'V', '^', '<', '<']
+3
+list
+6
+['^', '>', '^', '<', '^', '<']
+4
+list
+6
+['^', '^', '<', '>', '<', '^']
+5
+list
+6
+['^', '>', '>', '^', '^', '<']
+
+The same for [1,5], [2,2] and many others for sure not tested branches
+But [1,2] is not there. 
+
+When was it happened?
+A lot of simular setups in dictionary. But not all. DO the change together?
+
+Iteration algorith is working!!! Requires from about 1E5 to 1E6 iteration. Thus, not suitable for recursion. Why GA is not working?
+Solutions are found for all starting points. [4,5] takes too long
 			 
